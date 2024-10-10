@@ -1,0 +1,25 @@
+{{> layout/header}}
+    <main class="container p-5 contet">
+        <div class="card">
+            <div class="card-header">
+                <b>{{name}}</b>
+                <div class="card-body">
+                    <form action="/join" method="post" enctype="application/x-www-form-urlencoded">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="enter username" name="username">
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control" placeholder="enter password" name="password">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="enter email" name="email">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary form-control">회원가입</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </main>
+{{> layout/footer}}
