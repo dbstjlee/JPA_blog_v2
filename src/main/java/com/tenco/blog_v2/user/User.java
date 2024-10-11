@@ -24,6 +24,11 @@ public class User {
     private String username;
     private String password;
     private String email;
+
+    // 역할 추가 - 일반 사용자 = "User" / 관리자 = "Admin"
+    @Column(nullable=false)
+    private String role;
+
     
     @CreationTimestamp // 엔티티 생성시 자동으로 현재 시간 입력
     private Timestamp createdAt;
@@ -33,11 +38,12 @@ public class User {
    //@OneToMany(mappedBy = "user", fetch = FetchType.EAGER) // 즉시 로딩 설정(연관된 엔티티 즉시 조회)
     private List<Board> boards;
 
-    public User(Integer id, String username, String password, String email, Timestamp createdAt, List<Board> boards) {
+    public User(Integer id, String username, String password, String email, String role, Timestamp createdAt, List<Board> boards) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = role;
         this.createdAt = createdAt;
         this.boards = boards;
     }

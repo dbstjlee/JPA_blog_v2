@@ -4,34 +4,37 @@ server:
       charset: utf-8
       force: true
   port: 8080
+  error:
+    whitelabel:
+      enabled: true # 뷰 렌더링 오류 활성화 여부
 
 spring:
   mustache:
     servlet:
-      expose-session-attributes: true
-      expose-request-attributes: true
+      expose-session-attributes: true  # Mustache 템플릿에서 세션 속성에 접근할 수 있도록 허용
+      expose-request-attributes: true  # Mustache 템플릿에서 요청 속성에 접근할 수 있도록 허용
   datasource:
-    driver-class-name: org.h2.Driver    # ?????? ????? H2 DB? ??
-    url: jdbc:h2:mem:test;MODE=MySQL    # H2 ???? ??????? MySQL ?? ??? ?? (????)
-    username: sa                        # ?????? ?? ? ?? ??? ??
-    password:                           # ?????? ?? ???? (?? ??)
+    driver-class-name: org.h2.Driver    # 데이터베이스 드라이버로 H2 DB를 사용
+    url: jdbc:h2:mem:test;MODE=MySQL    # H2 인메모리 데이터베이스를 MySQL 호환 모드로 사용 (테스트용)
+    username: sa                        # 데이터베이스 연결 시 기본 사용자 이름
+    password:                           # 데이터베이스 기본 비밀번호 (비어 있음)
   h2:
     console:
-      enabled: true   # H2 ?????? ??? ????? ?????? ??????? ??? ? ??? ?
+      enabled: true   # H2 데이터베이스 콘솔을 활성화하여 브라우저에서 데이터베이스를 관리할 수 있도록 함
   sql:
     init:
       data-locations:
-        - classpath:db/data.sql  # ?????? ??? ? ??? ??? ?? SQL ??? ?? (data.sql)
+        - classpath:db/data.sql  # 애플리케이션 초기화 시 실행할 데이터 삽입 SQL 파일의 경로 (data.sql)
   jpa:
     hibernate:
-      ddl-auto: create
-    show-sql: true
+      ddl-auto: create # 애플리케이션이 시작될 때 데이터베이스 테이블을 자동으로 생성
+    show-sql: true # Hibernate가 실행하는 SQL 쿼리를 콘솔에 출력
     properties:
       hibernate:
-        format_sql: true
-        default_batch_fetch_size: 10 #한번에 들고오는 갯수 설정
-    defer-datasource-initialization: true
+        format_sql: true # 출력되는 SQL 쿼리를 포맷팅하여 읽기 쉽게 출력
+        default_batch_fetch_size: 10 # 한번에 들고 오는 개수 설정
+    defer-datasource-initialization: true # 데이터베이스 초기화가 지연되도록 설정하여 JPA 설정 후에 데이터 초기화
 
   output:
     ansi:
-      enabled: always
+      enabled: always # 콘솔 출력 시 ANSI 색상을 항상 사용하도록 설정 (색상을 통해 로그를 더 쉽게 구분 가능)
