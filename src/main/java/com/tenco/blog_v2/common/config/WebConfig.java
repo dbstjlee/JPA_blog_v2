@@ -12,6 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired // DI 처리
     private LoginInterceptor loginInterceptor;
 
+    @Autowired
+    private AdminInterceptor adminInterceptor;
 
     /**
      * 인터셉터를 등록하고 적용할 URL 패턴을 설정하는 메서드이다.
@@ -23,10 +25,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/protected/**") // 인터셉터를 적용할 경로 패턴 설정
                 .excludePathPatterns("/public/**", "/login", "/logout"); // 인터셉터를 제외할 경로 패턴 설정
+
+        // 관리자 인터셉터 적용
+        registry.addInterceptor(adminInterceptor)
+            .addPathPatterns("/admin/**"); // /admin/** 경로에만 관리자 인터셉터 적용}
     }
-
-    // 관리자용 인터셉터 등록
-
-
-
 }

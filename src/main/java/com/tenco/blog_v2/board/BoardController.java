@@ -1,13 +1,17 @@
 package com.tenco.blog_v2.board;
 
 
+import com.tenco.blog_v2.common.errors.Exception403;
 import com.tenco.blog_v2.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -49,7 +53,8 @@ public class BoardController {
         }
 
         if(!board.getUser().getId().equals(sessionUser.getId())) {
-            return "redirect:/error-403"; // 권한이 없습니다. 추후 수정
+            // 권한 검증
+            throw new Exception403("게시글을 수정할 권한이 없습니다.");
         }
 
         // 4. 유효성 검사 - 생략
@@ -94,7 +99,7 @@ public class BoardController {
             return "redirect:/error-404";
         }
         if( ! board.getUser().getId().equals(sessionUser.getId()) ){
-            return "redirect:/error-403"; // 추후 수정
+            throw new Exception403("게시글을 삭제할 권한이 없습니다.");
         }
 
 
@@ -141,15 +146,22 @@ public class BoardController {
     // 특정 게시글 요청 화면
     @GetMapping("/board/{id}")
     public String detail(@PathVariable(name = "id") Integer id, HttpServletRequest request) {
-        //JAP API 사용
-        //Board board =  boardRepository.findById(id);
+        // JPA API 사용
+        //Board board = boardRepository.findById(id);
+        // JPQL FETCH join 사용
         Board board = boardRepository.findByIdJoinUser(id);
-
-
-        //JPQL FETCH join 사용
-
+        User sessionUser = (User)session.getAttribute("sessionUser");
+        // 현재 로그인한 유저와 == 게시글 작성한 유저가 같아면
+        // isOwner = true, !isOwner = false
+        boolean isOwner = false;
+        if(sessionUser != null ) {
+            if(sessionUser.getId().equals(board.getUser().getId())) {
+                isOwner = true;
+            }
+        }
         request.setAttribute("board", board);
-       return "board/detail";
+        request.setAttribute("isOwner", isOwner);
+        return "board/detail";
     }
 
 

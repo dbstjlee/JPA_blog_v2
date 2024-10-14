@@ -2,16 +2,17 @@ package com.tenco.blog_v2.board;
 
 import com.tenco.blog_v2.user.User;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "board_tb")
-@Data
+//@Data
+@Getter
+@Setter
 @NoArgsConstructor
+//@AllArgsConstructor -> Builder 만들어 놓아서 필요X
 public class Board {
 
     @Id

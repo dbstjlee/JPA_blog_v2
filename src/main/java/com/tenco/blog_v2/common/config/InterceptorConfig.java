@@ -14,6 +14,9 @@ public class InterceptorConfig {
     }
 
     // AdminInterceptor 등록
-
+    @Bean
+    public AdminInterceptor adminInterceptor() {
+        return new AdminInterceptor();
+    }
 
 }
