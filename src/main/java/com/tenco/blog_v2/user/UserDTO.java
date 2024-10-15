@@ -10,7 +10,6 @@ public class UserDTO {
 
         private String username;
         private String password;
-
     }
 
     // controller 에서 이걸로 바인딩 함
@@ -27,7 +26,7 @@ public class UserDTO {
                     .username(username)
                     .password(password)
                     .email(email)
-                    .role(role)
+                    .role("USER")
                     .build();
 
         }
@@ -38,6 +37,4 @@ public class UserDTO {
         private String password;
         private String email;
     }
-
-
 }
