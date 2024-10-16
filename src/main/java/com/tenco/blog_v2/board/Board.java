@@ -1,10 +1,16 @@
 package com.tenco.blog_v2.board;
 
+import com.tenco.blog_v2.reply.Reply;
 import com.tenco.blog_v2.user.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "board_tb")
@@ -36,6 +42,12 @@ public class Board {
     @Transient
     boolean isBoardOwner;
 
+    // 댓글 엔티티를 넣어서 관계 설정하면 --> 양방향 관계 성립
+    // reply는 collection으로 들어와야 함.
+    // FK의 주인은 reply이므로 board에서 mappedBy(매핑 기준)를 선언해야 함.
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<Reply> relies = new ArrayList<>(); // 빠른 초기화
+    
 
     @Builder
     public Board(Integer id, String title, String content, User user, Timestamp createdAt) {
