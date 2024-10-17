@@ -45,8 +45,9 @@ public class Board {
     // 댓글 엔티티를 넣어서 관계 설정하면 --> 양방향 관계 성립
     // reply는 collection으로 들어와야 함.
     // FK의 주인은 reply이므로 board에서 mappedBy(매핑 기준)를 선언해야 함.
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-    private List<Reply> relies = new ArrayList<>(); // 빠른 초기화
+    // 해당 게시글이 삭제되면 종속되어 있는 댓글들을 먼저 삭제해라
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE) 
+    private List<Reply> replies = new ArrayList<>(); // 빠른 초기화
     
 
     @Builder

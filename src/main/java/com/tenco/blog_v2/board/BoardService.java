@@ -45,9 +45,18 @@ public class BoardService {
      * 게시글 상세 보기 서비스, 게시글 주인 여부 판별
      */
     public Board getBoardDetails(int boardId, User sessionUser) {
+      
+        // 전략 2번
+        // JPQL JOIN FETCH 사용, 즉 User 엔티티를 한 번에 조인 처리
         Board board = boardJPARepository
-                .findById(boardId)
-                .orElseThrow(() -> new Exception404("게시글을 찾을 수 없어요"));
+                .findByIdJoinUser(boardId)
+                .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다."));
+        
+        
+//        //전략을 1번 JPA가 객체 간의 관계를 통해 직접 쿼리를 만들고 가지고 왔다.
+//        Board board = boardJPARepository
+//                .findById(boardId)
+//                .orElseThrow(() -> new Exception404("게시글을 찾을 수 없어요"));
                 
         // 현재 사용자가 게시글을 작성 했는지 여부 판별
         boolean isBoardOwner = false;
@@ -56,12 +65,29 @@ public class BoardService {
                 isBoardOwner = true;
             }
         }
+        
+        
+        // 코드 추가
+        // 내가 작성한 댓글인가를 구현해야 한다.
+        board.getReplies().forEach(reply -> {
+            boolean isRelyOwner = false;
+            if(sessionUser != null) {
+                if(sessionUser.getId().equals(reply.getUser().getId())){
+                    isRelyOwner = true; // 댓글의 주인임
+                }
+            }
+
+            // 객체에서만 존재하는 필드 - 리플 객체 엔티티 상태값 변경 처리
+            reply.setReplyOwner(isRelyOwner);
+            
+            
+        });
+        
+        
         board.setBoardOwner(isBoardOwner); // 값 주입
         // board.isBoardOwner(); // T, F 확인
         return board;
     }
-
-
 
     /**
      * 게시글 삭제 서비스
