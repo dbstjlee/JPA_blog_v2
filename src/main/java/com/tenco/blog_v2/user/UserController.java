@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
 @RequiredArgsConstructor
 @Slf4j
 @Controller
@@ -31,15 +32,22 @@ public class UserController {
      * 머스테치 템플릿 엔진을 통해서 뷰 파일을 렌더링 합니다.
      */
     @GetMapping("/user/update-form")
-    public String updateForm(HttpServletRequest request){
-        log.info("회원가입 페이지");
+    public String updateForm(HttpServletRequest request, HttpSession session) {
+    //public String updateForm(HttpServletRequest request, @SessionAttribute (name = "sessionUser") User sessionUser ){
+
+        // @SessionAttribute (name = "sessionUser") User sessionUser
+        // 이 어노테이션은 모델에 저장되어 있는 세션 값을 바로 가지고 오는 어노테이션이다.
+        // 단, 이 뷰, 템플릿 엔진에 접근하도록 설계되어 있다. 여기서 사용하는 것은 권장 X
 
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if(sessionUser == null) {
-            return "redirect:/login-form";
-        }
         User user = userService.readUser(sessionUser.getId());
         request.setAttribute("user", user);
+
+
+//        User sessionUser = (User) session.getAttribute("sessionUser");
+//        if(sessionUser == null) {
+//            return "redirect:/login-form";
+//        }
         return "user/update-form"; // 템플릿 경로: user/join-Form.mustache
     }
 

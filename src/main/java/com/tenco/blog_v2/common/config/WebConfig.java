@@ -23,8 +23,14 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 
         registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/protected/**") // 인터셉터를 적용할 경로 패턴 설정
-                .excludePathPatterns("/public/**", "/login", "/logout"); // 인터셉터를 제외할 경로 패턴 설정
+                .addPathPatterns("/board/**", "/user/**", "/reply/**") // 인터셉터를 적용할 경로 패턴 설정
+//                .excludePathPatterns("/public/**", "/login", "/logout"); // 인터셉터를 제외할 경로 패턴 설정 --> 상세보기(로그인 안 되어 있어도 볼 수 있게)
+                .excludePathPatterns("/board/{id:\\d+}"); 
+                // 인터셉터 적용해서 제외할 URL 패턴 적용
+                // /board/1, /board/33 <-- 로그인 인터셉터에서 제외됨.
+                // \d+ : 숫자 하나 이상을 의미하는 정규 표현식 패턴
+                // TODO - 이 부분 인터셉터 적용 후 로그인 후 댓글 작성 부분에서 막힘
+
 
         // 관리자 인터셉터 적용
         registry.addInterceptor(adminInterceptor)
